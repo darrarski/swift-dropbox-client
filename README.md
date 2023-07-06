@@ -5,11 +5,69 @@
 
 Basic Dropbox HTTP API client that does not depend on Dropbox's SDK. No external dependencies.
 
+- Authorize access
+- ...
+
 ## 📖 Usage
 
 Use [Swift Package Manager](https://swift.org/package-manager/) to add the `DropboxClient` library as a dependency to your project. 
 
-*TBD*
+Register your application in [Dropbox App Console](https://www.dropbox.com/developers/apps).
+
+Configure your app so that it can handle sign-in redirects. For an iOS app, you can do it by adding or modifying `CFBundleURLTypes` in `Info.plist`:
+
+```xml
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleTypeRole</key>
+    <string>Editor</string>
+    <key>CFBundleURLName</key>
+    <string></string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>db-abcd1234</string>
+    </array>
+  </dict>
+</array>
+```
+
+Create the client:
+
+```swift
+import DropboxClient
+
+let client = DropboxClient.Client.live(
+  config: .init(
+    appKey: "abcd1234",
+    redirectURI: "db-abcd1234://my-app"
+  )
+)
+```
+
+Make sure the `redirectURI` contains the scheme defined earlier.
+
+The package provides a basic implementation for storing vulnerable data securely in the keychain. Optionally, you can provide your own, custom implementation of a keychain, instead of using the default one.
+
+```swift
+import DropboxClient
+
+let keychain = DropboxClient.Keychain(
+  loadCredentials: { () async -> DropboxClient.Credentials? in
+    // load from secure storage and return
+  },
+  saveCredentials: { (DropboxClient.Credentials) async -> Void in
+    // save in secure storage
+  },
+  deleteCredentials: { () async -> Void in
+    // delete from secure storage
+  }
+)
+let client = DropboxClient.Client.live(
+  config: .init(...),
+  keychain: keychain
+)
+``` 
 
 ### ▶️ Example
 
