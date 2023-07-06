@@ -1,0 +1,408 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		31FB21442A57552E00B9FD8C /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FB21432A57552E00B9FD8C /* App.swift */; };
+		31FB21482A57552E00B9FD8C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 31FB21472A57552E00B9FD8C /* Assets.xcassets */; };
+		31FB21532A5755E400B9FD8C /* DropboxClient in Frameworks */ = {isa = PBXBuildFile; productRef = 31FB21522A5755E400B9FD8C /* DropboxClient */; };
+		31FB21552A57560A00B9FD8C /* ExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FB21542A57560A00B9FD8C /* ExampleView.swift */; };
+		31FB21572A57561D00B9FD8C /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FB21562A57561D00B9FD8C /* Dependencies.swift */; };
+		31FB215A2A5756BD00B9FD8C /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = 31FB21592A5756BD00B9FD8C /* Pulse */; };
+		31FB215C2A5756BD00B9FD8C /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 31FB215B2A5756BD00B9FD8C /* PulseUI */; };
+		31FB215F2A5756D800B9FD8C /* PulseLogHandler in Frameworks */ = {isa = PBXBuildFile; productRef = 31FB215E2A5756D800B9FD8C /* PulseLogHandler */; };
+		31FB21622A5756F000B9FD8C /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 31FB21612A5756F000B9FD8C /* Dependencies */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		31FB21402A57552E00B9FD8C /* DropboxClientExampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DropboxClientExampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		31FB21432A57552E00B9FD8C /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		31FB21472A57552E00B9FD8C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		31FB21542A57560A00B9FD8C /* ExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleView.swift; sourceTree = "<group>"; };
+		31FB21562A57561D00B9FD8C /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		31FB213D2A57552E00B9FD8C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31FB21622A5756F000B9FD8C /* Dependencies in Frameworks */,
+				31FB215F2A5756D800B9FD8C /* PulseLogHandler in Frameworks */,
+				31FB215C2A5756BD00B9FD8C /* PulseUI in Frameworks */,
+				31FB215A2A5756BD00B9FD8C /* Pulse in Frameworks */,
+				31FB21532A5755E400B9FD8C /* DropboxClient in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		31FB21372A57552E00B9FD8C = {
+			isa = PBXGroup;
+			children = (
+				31FB21422A57552E00B9FD8C /* DropboxClientExampleApp */,
+				31FB21412A57552E00B9FD8C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		31FB21412A57552E00B9FD8C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				31FB21402A57552E00B9FD8C /* DropboxClientExampleApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		31FB21422A57552E00B9FD8C /* DropboxClientExampleApp */ = {
+			isa = PBXGroup;
+			children = (
+				31FB21432A57552E00B9FD8C /* App.swift */,
+				31FB21542A57560A00B9FD8C /* ExampleView.swift */,
+				31FB21562A57561D00B9FD8C /* Dependencies.swift */,
+				31FB21472A57552E00B9FD8C /* Assets.xcassets */,
+			);
+			path = DropboxClientExampleApp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		31FB213F2A57552E00B9FD8C /* DropboxClientExampleApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31FB214E2A57552E00B9FD8C /* Build configuration list for PBXNativeTarget "DropboxClientExampleApp" */;
+			buildPhases = (
+				31FB213C2A57552E00B9FD8C /* Sources */,
+				31FB213D2A57552E00B9FD8C /* Frameworks */,
+				31FB213E2A57552E00B9FD8C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DropboxClientExampleApp;
+			packageProductDependencies = (
+				31FB21522A5755E400B9FD8C /* DropboxClient */,
+				31FB21592A5756BD00B9FD8C /* Pulse */,
+				31FB215B2A5756BD00B9FD8C /* PulseUI */,
+				31FB215E2A5756D800B9FD8C /* PulseLogHandler */,
+				31FB21612A5756F000B9FD8C /* Dependencies */,
+			);
+			productName = DropboxClientExampleApp;
+			productReference = 31FB21402A57552E00B9FD8C /* DropboxClientExampleApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		31FB21382A57552E00B9FD8C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					31FB213F2A57552E00B9FD8C = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 31FB213B2A57552E00B9FD8C /* Build configuration list for PBXProject "Example" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 31FB21372A57552E00B9FD8C;
+			packageReferences = (
+				31FB21582A5756BD00B9FD8C /* XCRemoteSwiftPackageReference "Pulse" */,
+				31FB215D2A5756D800B9FD8C /* XCRemoteSwiftPackageReference "PulseLogHandler" */,
+				31FB21602A5756F000B9FD8C /* XCRemoteSwiftPackageReference "swift-dependencies" */,
+			);
+			productRefGroup = 31FB21412A57552E00B9FD8C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				31FB213F2A57552E00B9FD8C /* DropboxClientExampleApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		31FB213E2A57552E00B9FD8C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31FB21482A57552E00B9FD8C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		31FB213C2A57552E00B9FD8C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31FB21572A57561D00B9FD8C /* Dependencies.swift in Sources */,
+				31FB21442A57552E00B9FD8C /* App.swift in Sources */,
+				31FB21552A57560A00B9FD8C /* ExampleView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		31FB214C2A57552E00B9FD8C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		31FB214D2A57552E00B9FD8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		31FB214F2A57552E00B9FD8C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pl.darrarski.DropboxClientExampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		31FB21502A57552E00B9FD8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 0;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pl.darrarski.DropboxClientExampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		31FB213B2A57552E00B9FD8C /* Build configuration list for PBXProject "Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31FB214C2A57552E00B9FD8C /* Debug */,
+				31FB214D2A57552E00B9FD8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		31FB214E2A57552E00B9FD8C /* Build configuration list for PBXNativeTarget "DropboxClientExampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31FB214F2A57552E00B9FD8C /* Debug */,
+				31FB21502A57552E00B9FD8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		31FB21582A5756BD00B9FD8C /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.7.3;
+			};
+		};
+		31FB215D2A5756D800B9FD8C /* XCRemoteSwiftPackageReference "PulseLogHandler" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/PulseLogHandler.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.2.0;
+			};
+		};
+		31FB21602A5756F000B9FD8C /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-dependencies.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		31FB21522A5755E400B9FD8C /* DropboxClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DropboxClient;
+		};
+		31FB21592A5756BD00B9FD8C /* Pulse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31FB21582A5756BD00B9FD8C /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = Pulse;
+		};
+		31FB215B2A5756BD00B9FD8C /* PulseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31FB21582A5756BD00B9FD8C /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseUI;
+		};
+		31FB215E2A5756D800B9FD8C /* PulseLogHandler */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31FB215D2A5756D800B9FD8C /* XCRemoteSwiftPackageReference "PulseLogHandler" */;
+			productName = PulseLogHandler;
+		};
+		31FB21612A5756F000B9FD8C /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31FB21602A5756F000B9FD8C /* XCRemoteSwiftPackageReference "swift-dependencies" */;
+			productName = Dependencies;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 31FB21382A57552E00B9FD8C /* Project object */;
+}

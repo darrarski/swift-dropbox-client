@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "C962C7A1-69B6-4B65-B481-FEE99C8A18B7",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "DropboxClientTests",
+        "name" : "DropboxClientTests"
+      }
+    }
+  ],
+  "version" : 1
+}
