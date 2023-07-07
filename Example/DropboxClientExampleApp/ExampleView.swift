@@ -8,6 +8,7 @@ struct ExampleView: View {
   let log = Logger(label: Bundle.main.bundleIdentifier!)
   @State var isSignedIn = false
   @State var list: ListFolder.Result?
+  @State var fileContentAlert: String?
 
   var body: some View {
     Form {
@@ -33,6 +34,20 @@ struct ExampleView: View {
         }
       }
     }
+    .alert(
+      "File content",
+      isPresented: Binding(
+        get: { fileContentAlert != nil },
+        set: { isPresented in
+          if !isPresented {
+            fileContentAlert = nil
+          }
+        }
+      ),
+      presenting: fileContentAlert,
+      actions: { _ in Button("OK") {} },
+      message: { Text($0) }
+    )
   }
 
   var authSection: some View {
@@ -128,6 +143,26 @@ struct ExampleView: View {
       VStack(alignment: .leading) {
         Text("Server modified").font(.caption).foregroundColor(.secondary)
         Text(entry.serverModified.formatted(date: .complete, time: .complete))
+      }
+
+      Button {
+        Task<Void, Never> {
+          do {
+            let data = try await client.downloadFile(path: entry.id)
+            if let string = String(data: data, encoding: .utf8) {
+              fileContentAlert = string
+            } else {
+              fileContentAlert = data.base64EncodedString()
+            }
+          } catch {
+            log.error("DownloadFile failure", metadata: [
+              "error": "\(error)",
+              "localizedDescription": "\(error.localizedDescription)"
+            ])
+          }
+        }
+      } label: {
+        Text("Download File")
       }
     }
   }

@@ -1,14 +1,17 @@
 public struct Client: Sendable {
   public init(
     auth: Auth,
-    listFolder: ListFolder
+    listFolder: ListFolder,
+    downloadFile: DownloadFile
   ) {
     self.auth = auth
     self.listFolder = listFolder
+    self.downloadFile = downloadFile
   }
 
   public var auth: Auth
   public var listFolder: ListFolder
+  public var downloadFile: DownloadFile
 }
 
 extension Client {
@@ -30,6 +33,10 @@ extension Client {
         pkceUtils: pkceUtils
       ),
       listFolder: .live(
+        keychain: keychain,
+        httpClient: httpClient
+      ),
+      downloadFile: .live(
         keychain: keychain,
         httpClient: httpClient
       )
