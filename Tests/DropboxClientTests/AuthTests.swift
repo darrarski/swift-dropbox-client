@@ -215,7 +215,7 @@ final class AuthTests: XCTestCase {
     let auth = Auth.live(
       config: .test,
       keychain: .unimplemented(),
-      httpClient: .init { request in
+      httpClient: .init { _ in
         (
           "Error!!!".data(using: .utf8)!,
           HTTPURLResponse(

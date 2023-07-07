@@ -67,7 +67,7 @@ struct ExampleView: View {
       Button {
         Task<Void, Never> {
           do {
-            list = try await client.listFolder(.init())
+            list = try await client.listFolder(path: "")
           } catch {
             log.error("ListFolder failure", metadata: [
               "error": "\(error)",

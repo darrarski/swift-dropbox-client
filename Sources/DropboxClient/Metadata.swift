@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Metadata: Sendable, Equatable, Identifiable, Codable {
+public struct Metadata: Sendable, Equatable, Identifiable {
   public enum Tag: String, Sendable, Equatable, Codable {
     case file, folder, deleted
   }
@@ -12,7 +12,8 @@ public struct Metadata: Sendable, Equatable, Identifiable, Codable {
     pathDisplay: String,
     pathLower: String,
     clientModified: Date,
-    serverModified: Date
+    serverModified: Date,
+    isDownloadable: Bool
   ) {
     self.tag = tag
     self.id = id
@@ -21,6 +22,7 @@ public struct Metadata: Sendable, Equatable, Identifiable, Codable {
     self.pathLower = pathLower
     self.clientModified = clientModified
     self.serverModified = serverModified
+    self.isDownloadable = isDownloadable
   }
 
   public var tag: Tag
@@ -30,4 +32,18 @@ public struct Metadata: Sendable, Equatable, Identifiable, Codable {
   public var pathLower: String
   public var clientModified: Date
   public var serverModified: Date
+  public var isDownloadable: Bool
+}
+
+extension Metadata: Codable {
+  enum CodingKeys: String, CodingKey {
+    case tag = ".tag"
+    case id
+    case name
+    case pathDisplay
+    case pathLower
+    case clientModified
+    case serverModified
+    case isDownloadable
+  }
 }

@@ -30,7 +30,8 @@ extension Client {
         pkceUtils: pkceUtils
       ),
       listFolder: .live(
-        keychain: keychain
+        keychain: keychain,
+        httpClient: httpClient
       )
     )
   }

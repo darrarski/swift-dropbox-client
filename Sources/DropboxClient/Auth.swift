@@ -161,7 +161,7 @@ extension Auth {
           var accountId: String
         }
 
-        let responseBody = try JSONDecoder.auth.decode(
+        let responseBody = try JSONDecoder.api.decode(
           ResponseBody.self,
           from: responseData
         )
