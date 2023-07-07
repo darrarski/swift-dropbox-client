@@ -50,7 +50,7 @@ extension DropboxClient.Client: DependencyKey {
         isSignedIn: { await isSignedIn.value },
         isSignedInStream: { isSignedIn.eraseToStream() },
         signIn: { await isSignedIn.setValue(true) },
-        handleRedirect: { _ in },
+        handleRedirect: { _ in false },
         signOut: { await isSignedIn.setValue(false) }
       ),
       listFolder: .init { _ in

@@ -55,7 +55,9 @@ final class AuthTests: XCTestCase {
       pkceUtils: .unimplemented()
     )
 
-    try await auth.handleRedirect(URL(string: Config.test.redirectURI)!)
+    let didHandle = try await auth.handleRedirect(URL(string: Config.test.redirectURI)!)
+
+    XCTAssertFalse(didHandle)
   }
 
   func testIgnoreUnrelatedRedirects() async throws {
@@ -73,7 +75,9 @@ final class AuthTests: XCTestCase {
 
     await auth.signIn()
 
-    try await auth.handleRedirect(URL(string: "https://darrarski.pl")!)
+    let didHandle = try await auth.handleRedirect(URL(string: "https://darrarski.pl")!)
+
+    XCTAssertFalse(didHandle)
   }
 
   func testHandleRedirectWithError() async throws {
@@ -93,7 +97,7 @@ final class AuthTests: XCTestCase {
     await auth.signIn()
 
     do {
-      try await auth.handleRedirect(url)
+      _ = try await auth.handleRedirect(url)
       XCTFail("Expected to throw, but didn't")
     } catch {
       XCTAssertEqual(
@@ -120,7 +124,7 @@ final class AuthTests: XCTestCase {
     await auth.signIn()
 
     do {
-      try await auth.handleRedirect(url)
+      _ = try await auth.handleRedirect(url)
       XCTFail("Expected to throw, but didn't")
     } catch {
       XCTAssertEqual(
@@ -175,7 +179,7 @@ final class AuthTests: XCTestCase {
     )
 
     await auth.signIn()
-    try await auth.handleRedirect(url)
+    let didHandle = try await auth.handleRedirect(url)
 
     await httpRequests.withValue {
       let url = URL(string: "https://api.dropboxapi.com/oauth2/token")!
@@ -208,6 +212,7 @@ final class AuthTests: XCTestCase {
     }
     let isSignedIn = await auth.isSignedIn()
     XCTAssertTrue(isSignedIn)
+    XCTAssertTrue(didHandle)
   }
 
   func testHandleRedirectErrorResponse() async {
@@ -238,7 +243,7 @@ final class AuthTests: XCTestCase {
     await auth.signIn()
 
     do {
-      try await auth.handleRedirect(url)
+      _ = try await auth.handleRedirect(url)
       XCTFail("Expected to throw, but didn't")
     } catch {
       XCTAssertEqual(

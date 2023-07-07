@@ -4,7 +4,7 @@ public struct Auth: Sendable {
   public typealias IsSignedIn = @Sendable () async -> Bool
   public typealias IsSignedInStream = @Sendable () -> AsyncStream<Bool>
   public typealias SignIn = @Sendable () async -> Void
-  public typealias HandleRedirect = @Sendable (URL) async throws -> Void
+  public typealias HandleRedirect = @Sendable (URL) async throws -> Bool
   public typealias SignOut = @Sendable () async -> Void
 
   public enum Error: Swift.Error, Sendable, Equatable {
@@ -109,8 +109,8 @@ extension Auth {
         await openURL(url)
       },
       handleRedirect: { url in
-        guard let codeVerifier = await codeVerifier.value else { return }
-        guard url.absoluteString.starts(with: config.redirectURI) else { return }
+        guard let codeVerifier = await codeVerifier.value else { return false }
+        guard url.absoluteString.starts(with: config.redirectURI) else { return false }
 
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let code = components?.queryItems?.first(where: { $0.name == "code" })?.value
@@ -177,6 +177,8 @@ extension Auth {
         )
 
         await saveCredentials(credentials)
+
+        return true
       },
       signOut: {
         await saveCredentials(nil)
