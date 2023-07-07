@@ -20,7 +20,8 @@ extension DropboxClient.Client: DependencyKey {
         pathDisplay: "/Preview-1.txt",
         pathLower: "/preview-1.txt",
         clientModified: Date(),
-        serverModified: Date()
+        serverModified: Date(),
+        isDownloadable: true
       ),
       Metadata(
         tag: .file,
@@ -29,7 +30,8 @@ extension DropboxClient.Client: DependencyKey {
         pathDisplay: "/Preview-2.txt",
         pathLower: "/preview-2.txt",
         clientModified: Date(),
-        serverModified: Date()
+        serverModified: Date(),
+        isDownloadable: true
       ),
       Metadata(
         tag: .file,
@@ -38,7 +40,8 @@ extension DropboxClient.Client: DependencyKey {
         pathDisplay: "/Preview-3.txt",
         pathLower: "/preview-3.txt",
         clientModified: Date(),
-        serverModified: Date()
+        serverModified: Date(),
+        isDownloadable: true
       ),
     ])
 
