@@ -11,6 +11,18 @@ extension Config {
   )
 }
 
+extension Credentials {
+  static let test = Credentials(
+    accessToken: "accessToken-test",
+    tokenType: "tokenType-test",
+    expiresAt: Date(timeIntervalSince1970: 123_456),
+    refreshToken: "refreshToken-test",
+    scope: "scope-test",
+    uid: "uid-test",
+    accountId: "accountId-test"
+  )
+}
+
 extension Keychain {
   static func unimplemented(
     file: StaticString = #filePath,

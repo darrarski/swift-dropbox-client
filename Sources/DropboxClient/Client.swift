@@ -1,11 +1,14 @@
 public struct Client: Sendable {
   public init(
-    auth: Auth
+    auth: Auth,
+    listFolder: ListFolder
   ) {
     self.auth = auth
+    self.listFolder = listFolder
   }
 
   public var auth: Auth
+  public var listFolder: ListFolder
 }
 
 extension Client {
@@ -25,6 +28,9 @@ extension Client {
         openURL: openURL,
         dateGenerator: dateGenerator,
         pkceUtils: pkceUtils
+      ),
+      listFolder: .live(
+        keychain: keychain
       )
     )
   }
