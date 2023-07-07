@@ -132,14 +132,12 @@ extension Auth {
             forHTTPHeaderField: "Content-Type"
           )
           request.httpBody = [
-            "code": code,
-            "grant_type": "authorization_code",
-            "redirect_uri": config.redirectURI,
-            "code_verifier": codeVerifier,
-            "client_id": config.appKey,
-          ].map { key, value in "\(key)=\(value)" }
-            .joined(separator: "&")
-            .data(using: .utf8)
+            "code=\(code)",
+            "grant_type=authorization_code",
+            "redirect_uri=\(config.redirectURI)",
+            "code_verifier=\(codeVerifier)",
+            "client_id=\(config.appKey)",
+          ].joined(separator: "&").data(using: .utf8)
 
           return request
         }()
