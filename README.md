@@ -6,6 +6,8 @@
 Basic Dropbox HTTP API client that does not depend on Dropbox's SDK. No external dependencies.
 
 - Authorize access
+- List folder
+- Download file
 - ...
 
 ## 📖 Usage
