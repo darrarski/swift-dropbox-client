@@ -59,6 +59,9 @@ extension DropboxClient.Client: DependencyKey {
           entries: await entries.value,
           hasMore: false
         )
+      },
+      downloadFile: .init { params in
+        "Preview file content for \(params.path)".data(using: .utf8)!
       }
     )
   }()
