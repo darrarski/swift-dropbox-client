@@ -41,14 +41,15 @@ final class ListFolderTests: XCTestCase {
         )
       }
     )
-
-    let result = try await listFolder(
+    let params = ListFolder.Params(
       path: "test-path",
       recursive: true,
       includeDeleted: true,
       limit: 1234,
       includeNonDownloadableFiles: false
     )
+
+    let result = try await listFolder(params)
 
     await httpRequests.withValue {
       let expectedRequest: URLRequest = {
@@ -59,10 +60,12 @@ final class ListFolderTests: XCTestCase {
           "Authorization": "\(credentials.tokenType) \(credentials.accessToken)",
           "Content-Type": "application/json"
         ]
+        request.httpBody = try! JSONEncoder.api.encode(params)
         return request
       }()
 
       XCTAssertEqual($0, [expectedRequest])
+      XCTAssertEqual($0.first?.httpBody, expectedRequest.httpBody!)
     }
     XCTAssertEqual(result, ListFolder.Result(
       cursor: "c1234",
