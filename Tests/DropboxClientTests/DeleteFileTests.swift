@@ -5,8 +5,16 @@ final class DeleteFileTests: XCTestCase {
   func testDeleteFile() async throws {
     let params = DeleteFile.Params(path: "/Prime_Numbers.txt")
     let credentials = Credentials.test
+    let didRefreshToken = ActorIsolated(0)
     let httpRequests = ActorIsolated<[URLRequest]>([])
     let deleteFile = DeleteFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {
+          await didRefreshToken.withValue { $0 += 1 }
+        }
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { credentials }
@@ -41,6 +49,9 @@ final class DeleteFileTests: XCTestCase {
 
     let result = try await deleteFile(params)
 
+    await didRefreshToken.withValue {
+      XCTAssertEqual($0, 1)
+    }
     try await httpRequests.withValue {
       let url = URL(string: "https://api.dropboxapi.com/2/files/delete_v2")!
       var expectedRequest = URLRequest(url: url)
@@ -80,6 +91,11 @@ final class DeleteFileTests: XCTestCase {
 
   func testDeleteFileErrorResponse() async {
     let deleteFile = DeleteFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { .test }
@@ -115,6 +131,11 @@ final class DeleteFileTests: XCTestCase {
 
   func testDeleteFileWhenNotAuthorized() async {
     let deleteFile = DeleteFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { nil }

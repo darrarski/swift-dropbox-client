@@ -257,6 +257,174 @@ final class AuthTests: XCTestCase {
     }
   }
 
+  func testDontRefreshTokenWithoutCredentials() async throws {
+    let auth = Auth.live(
+      config: .test,
+      keychain: {
+        var keychain = Keychain.unimplemented()
+        keychain.loadCredentials = { nil }
+        return keychain
+      }(),
+      httpClient: .unimplemented(),
+      openURL: .unimplemented(),
+      dateGenerator: .unimplemented(),
+      pkceUtils: .unimplemented()
+    )
+
+    try await auth.refreshToken()
+  }
+
+  func testDontRefreshTokenIfNotExpired() async throws {
+    let date = Date(timeIntervalSince1970: 1_000_000)
+    let credentials = ActorIsolated<Credentials?>(Credentials(
+      accessToken: "",
+      tokenType: "",
+      expiresAt: date.addingTimeInterval(1),
+      refreshToken: "",
+      scope: "",
+      uid: "",
+      accountId: ""
+    ))
+    let auth = Auth.live(
+      config: .test,
+      keychain: {
+        var keychain = Keychain.unimplemented()
+        keychain.loadCredentials = { await credentials.value }
+        return keychain
+      }(),
+      httpClient: .unimplemented(),
+      openURL: .unimplemented(),
+      dateGenerator: .init { date },
+      pkceUtils: .unimplemented()
+    )
+
+    try await auth.refreshToken()
+  }
+
+  func testRefreshExpiredToken() async throws {
+    let httpRequests = ActorIsolated<[URLRequest]>([])
+    let date = Date(timeIntervalSince1970: 1_000_000)
+    let credentials = ActorIsolated<Credentials?>(Credentials(
+      accessToken: "access-token-1",
+      tokenType: "token-type-1",
+      expiresAt: date.addingTimeInterval(-1),
+      refreshToken: "refresh-token-1",
+      scope: "scope-1",
+      uid: "uid-1",
+      accountId: "accountId-1"
+    ))
+    let auth = Auth.live(
+      config: .test,
+      keychain: {
+        var keychain = Keychain.unimplemented()
+        keychain.loadCredentials = { await credentials.value }
+        keychain.saveCredentials = { await credentials.setValue($0) }
+        return keychain
+      }(),
+      httpClient: .init { request in
+        await httpRequests.withValue { $0.append(request) }
+        return (
+          """
+          {
+            "access_token": "access-token-2",
+            "expires_in": 4321,
+            "token_type": "token-type-2"
+          }
+          """.data(using: .utf8)!,
+          HTTPURLResponse(
+            url: URL(filePath: "/"),
+            statusCode: 200,
+            httpVersion: nil,
+            headerFields: nil
+          )!
+        )
+      },
+      openURL: .unimplemented(),
+      dateGenerator: .init { date },
+      pkceUtils: .unimplemented()
+    )
+
+    try await auth.refreshToken()
+
+    await httpRequests.withValue {
+      let url = URL(string: "https://api.dropboxapi.com/oauth2/token")!
+      var expectedRequest = URLRequest(url: url)
+      expectedRequest.httpMethod = "POST"
+      expectedRequest.allHTTPHeaderFields = [
+        "Content-Type": "application/x-www-form-urlencoded"
+      ]
+      expectedRequest.httpBody = [
+        "grant_type=refresh_token",
+        "refresh_token=refresh-token-1",
+        "client_id=\(Config.test.appKey)",
+      ].joined(separator: "&").data(using: .utf8)!
+
+      XCTAssertEqual($0, [expectedRequest])
+      XCTAssertEqual($0.first?.httpBody, expectedRequest.httpBody!)
+    }
+    await credentials.withValue {
+      XCTAssertEqual($0, Credentials(
+        accessToken: "access-token-2",
+        tokenType: "token-type-2",
+        expiresAt: date.addingTimeInterval(4321),
+        refreshToken: "refresh-token-1",
+        scope: "scope-1",
+        uid: "uid-1",
+        accountId: "accountId-1"
+      ))
+    }
+  }
+
+  func testRefreshTokenErrorResponse() async {
+    let date = Date(timeIntervalSince1970: 1_000_000)
+    let credentials = ActorIsolated<Credentials?>(Credentials(
+      accessToken: "access-token-1",
+      tokenType: "token-type-1",
+      expiresAt: date.addingTimeInterval(-1),
+      refreshToken: "refresh-token-1",
+      scope: "scope-1",
+      uid: "uid-1",
+      accountId: "accountId-1"
+    ))
+    let auth = Auth.live(
+      config: .test,
+      keychain: {
+        var keychain = Keychain.unimplemented()
+        keychain.loadCredentials = { await credentials.value }
+        keychain.saveCredentials = { await credentials.setValue($0) }
+        return keychain
+      }(),
+      httpClient: .init { _ in
+        (
+          "Error!!!".data(using: .utf8)!,
+          HTTPURLResponse(
+            url: URL(filePath: "/"),
+            statusCode: 500,
+            httpVersion: nil,
+            headerFields: nil
+          )!
+        )
+      },
+      openURL: .unimplemented(),
+      dateGenerator: .init { date },
+      pkceUtils: .unimplemented()
+    )
+
+    do {
+      try await auth.refreshToken()
+      XCTFail("Expected to throw, but didn't")
+    } catch {
+      XCTAssertEqual(
+        error as? Auth.Error,
+        .response(
+          statusCode: 500,
+          data: "Error!!!".data(using: .utf8)!
+        ),
+        "Expected to throw response error, got \(error)"
+      )
+    }
+  }
+
   func testSignOut() async {
     let credentials = ActorIsolated<Credentials?>(Credentials(
       accessToken: "",

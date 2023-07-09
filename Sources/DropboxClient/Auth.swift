@@ -5,6 +5,7 @@ public struct Auth: Sendable {
   public typealias IsSignedInStream = @Sendable () -> AsyncStream<Bool>
   public typealias SignIn = @Sendable () async -> Void
   public typealias HandleRedirect = @Sendable (URL) async throws -> Bool
+  public typealias RefreshToken = @Sendable () async throws -> Void
   public typealias SignOut = @Sendable () async -> Void
 
   public enum Error: Swift.Error, Sendable, Equatable {
@@ -18,12 +19,14 @@ public struct Auth: Sendable {
     isSignedInStream: @escaping IsSignedInStream,
     signIn: @escaping SignIn,
     handleRedirect: @escaping HandleRedirect,
+    refreshToken: @escaping RefreshToken,
     signOut: @escaping SignOut
   ) {
     self.isSignedIn = isSignedIn
     self.isSignedInStream = isSignedInStream
     self.signIn = signIn
     self.handleRedirect = handleRedirect
+    self.refreshToken = refreshToken
     self.signOut = signOut
   }
 
@@ -31,6 +34,7 @@ public struct Auth: Sendable {
   public var isSignedInStream: IsSignedInStream
   public var signIn: SignIn
   public var handleRedirect: HandleRedirect
+  public var refreshToken: RefreshToken
   public var signOut: SignOut
 }
 
@@ -179,6 +183,59 @@ extension Auth {
         await saveCredentials(credentials)
 
         return true
+      },
+      refreshToken: {
+        guard let credentials = await keychain.loadCredentials() else { return }
+        guard credentials.expiresAt <= now() else { return }
+
+        let request: URLRequest = {
+          var components = URLComponents()
+          components.scheme = "https"
+          components.host = "api.dropboxapi.com"
+          components.path = "/oauth2/token"
+
+          var request = URLRequest(url: components.url!)
+          request.httpMethod = "POST"
+          request.setValue(
+            "application/x-www-form-urlencoded",
+            forHTTPHeaderField: "Content-Type"
+          )
+          request.httpBody = [
+            "grant_type=refresh_token",
+            "refresh_token=\(credentials.refreshToken)",
+            "client_id=\(config.appKey)",
+          ].joined(separator: "&").data(using: .utf8)
+
+          return request
+        }()
+
+        let (responseData, response) = try await httpClient.data(for: request)
+        let statusCode = (response as? HTTPURLResponse)?.statusCode
+
+        guard let statusCode, (200..<300).contains(statusCode) else {
+          throw Error.response(statusCode: statusCode, data: responseData)
+        }
+
+        struct ResponseBody: Decodable {
+          var accessToken: String
+          var tokenType: String
+          var expiresIn: Int
+        }
+
+        let responseBody = try JSONDecoder.api.decode(
+          ResponseBody.self,
+          from: responseData
+        )
+
+        var newCredentials = credentials
+        newCredentials.accessToken = responseBody.accessToken
+        newCredentials.tokenType = responseBody.tokenType
+        newCredentials.expiresAt = Date(
+          timeInterval: TimeInterval(responseBody.expiresIn),
+          since: now()
+        )
+
+        await saveCredentials(newCredentials)
       },
       signOut: {
         await saveCredentials(nil)

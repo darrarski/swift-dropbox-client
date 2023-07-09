@@ -10,8 +10,16 @@ final class UploadFileTests: XCTestCase {
       autorename: true
     )
     let credentials = Credentials.test
+    let didRefreshToken = ActorIsolated(0)
     let httpRequests = ActorIsolated<[URLRequest]>([])
     let uploadFile = UploadFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {
+          await didRefreshToken.withValue { $0 += 1 }
+        }
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { credentials }
@@ -43,6 +51,9 @@ final class UploadFileTests: XCTestCase {
 
     let result = try await uploadFile(params)
 
+    await didRefreshToken.withValue {
+      XCTAssertEqual($0, 1)
+    }
     try await httpRequests.withValue {
       let url = URL(string: "https://content.dropboxapi.com/2/files/upload")!
       var expectedRequest = URLRequest(url: url)
@@ -92,6 +103,11 @@ final class UploadFileTests: XCTestCase {
 
   func testUploadFileErrorResponse() async {
     let uploadFile = UploadFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { .test }
@@ -127,6 +143,11 @@ final class UploadFileTests: XCTestCase {
 
   func testUploadFileWhenNotAuthorized() async {
     let uploadFile = UploadFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { nil }

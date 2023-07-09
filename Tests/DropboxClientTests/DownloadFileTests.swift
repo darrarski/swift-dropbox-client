@@ -4,8 +4,16 @@ import XCTest
 final class DownloadFileTests: XCTestCase {
   func testDownloadFile() async throws {
     let credentials = Credentials.test
+    let didRefreshToken = ActorIsolated(0)
     let httpRequests = ActorIsolated<[URLRequest]>([])
     let downloadFile = DownloadFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {
+          await didRefreshToken.withValue { $0 += 1 }
+        }
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { credentials }
@@ -28,6 +36,9 @@ final class DownloadFileTests: XCTestCase {
 
     let result = try await downloadFile(params)
 
+    await didRefreshToken.withValue {
+      XCTAssertEqual($0, 1)
+    }
     await httpRequests.withValue {
       let expectedRequest: URLRequest = {
         let url = URL(string: "https://content.dropboxapi.com/2/files/download")!
@@ -51,6 +62,11 @@ final class DownloadFileTests: XCTestCase {
 
   func testDownloadFileWhenNotAuthorized() async {
     let downloadFile = DownloadFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { nil }
@@ -72,6 +88,11 @@ final class DownloadFileTests: XCTestCase {
 
   func testDownloadFileErrorResponse() async {
     let downloadFile = DownloadFile.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { .test }

@@ -41,10 +41,13 @@ public struct DeleteFile: Sendable {
 
 extension DeleteFile {
   public static func live(
+    auth: Auth,
     keychain: Keychain,
     httpClient: HTTPClient
   ) -> DeleteFile {
     DeleteFile { params in
+      try await auth.refreshToken()
+
       guard let credentials = await keychain.loadCredentials() else {
         throw Error.notAuthorized
       }

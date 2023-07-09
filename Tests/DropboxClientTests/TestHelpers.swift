@@ -96,3 +96,35 @@ extension PKCEUtils {
     )
   }
 }
+
+extension Auth {
+  static func unimplemented(
+    file: StaticString = #filePath,
+    line: UInt = #line
+  ) -> Auth {
+    Auth(
+      isSignedIn: {
+        XCTFail("Unimplemented: \(Self.self).isSignedIn", file: file, line: line)
+        return false
+      },
+      isSignedInStream: {
+        XCTFail("Unimplemented: \(Self.self).isSignedInStream", file: file, line: line)
+        return AsyncStream { nil }
+      },
+      signIn: {
+        XCTFail("Unimplemented: \(Self.self).signIn", file: file, line: line)
+      },
+      handleRedirect: { _ in
+        XCTFail("Unimplemented: \(Self.self).handleRedirect", file: file, line: line)
+        throw UnimplementedError()
+      },
+      refreshToken: {
+        XCTFail("Unimplemented: \(Self.self).refreshToken", file: file, line: line)
+        throw UnimplementedError()
+      },
+      signOut: {
+        XCTFail("Unimplemented: \(Self.self).signOut", file: file, line: line)
+      }
+    )
+  }
+}
