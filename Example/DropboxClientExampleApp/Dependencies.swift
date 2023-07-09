@@ -71,6 +71,17 @@ extension DropboxClient.Client: DependencyKey {
           return entry
         }
         return DeleteFile.Result(metadata: entry)
+      },
+      uploadFile: .init { params in
+        FileMetadata(
+          id: "id:preview-uploaded",
+          name: "Preview-uploaded.txt",
+          pathDisplay: "/Preview-uploaded.txt",
+          pathLower: "/preview-uploaded.txt",
+          clientModified: Date(),
+          serverModified: Date(),
+          isDownloadable: true
+        )
       }
     )
   }()
