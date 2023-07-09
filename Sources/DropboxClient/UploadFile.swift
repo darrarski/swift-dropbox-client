@@ -58,10 +58,13 @@ public struct UploadFile: Sendable {
 
 extension UploadFile {
   public static func live(
+    auth: Auth,
     keychain: Keychain,
     httpClient: HTTPClient
   ) -> UploadFile {
     UploadFile { params in
+      try await auth.refreshToken()
+
       guard let credentials = await keychain.loadCredentials() else {
         throw Error.notAuthorized
       }

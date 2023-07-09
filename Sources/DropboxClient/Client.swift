@@ -29,28 +29,34 @@ extension Client {
     dateGenerator: DateGenerator = .live,
     pkceUtils: PKCEUtils = .live
   ) -> Client {
-    Client(
-      auth: .live(
-        config: config,
-        keychain: keychain,
-        httpClient: httpClient,
-        openURL: openURL,
-        dateGenerator: dateGenerator,
-        pkceUtils: pkceUtils
-      ),
+    let auth = Auth.live(
+      config: config,
+      keychain: keychain,
+      httpClient: httpClient,
+      openURL: openURL,
+      dateGenerator: dateGenerator,
+      pkceUtils: pkceUtils
+    )
+
+    return Client(
+      auth: auth,
       listFolder: .live(
+        auth: auth,
         keychain: keychain,
         httpClient: httpClient
       ),
       downloadFile: .live(
+        auth: auth,
         keychain: keychain,
         httpClient: httpClient
       ),
       deleteFile: .live(
+        auth: auth,
         keychain: keychain,
         httpClient: httpClient
       ),
       uploadFile: .live(
+        auth: auth,
         keychain: keychain,
         httpClient: httpClient
       )

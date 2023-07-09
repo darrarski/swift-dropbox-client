@@ -33,10 +33,13 @@ public struct DownloadFile: Sendable {
 
 extension DownloadFile {
   public static func live(
+    auth: Auth,
     keychain: Keychain,
     httpClient: HTTPClient
   ) -> DownloadFile {
     DownloadFile { params in
+      try await auth.refreshToken()
+
       guard let credentials = await keychain.loadCredentials() else {
         throw Error.notAuthorized
       }

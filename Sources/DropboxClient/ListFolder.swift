@@ -71,10 +71,13 @@ public struct ListFolder: Sendable {
 
 extension ListFolder {
   public static func live(
+    auth: Auth,
     keychain: Keychain,
     httpClient: HTTPClient
   ) -> ListFolder {
     ListFolder { params in
+      try await auth.refreshToken()
+
       guard let credentials = await keychain.loadCredentials() else {
         throw Error.notAuthorized
       }

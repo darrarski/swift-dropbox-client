@@ -4,8 +4,16 @@ import XCTest
 final class ListFolderTests: XCTestCase {
   func testListFolder() async throws {
     let credentials = Credentials.test
+    let didRefreshToken = ActorIsolated(0)
     let httpRequests = ActorIsolated<[URLRequest]>([])
     let listFolder = ListFolder.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {
+          await didRefreshToken.withValue { $0 += 1 }
+        }
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { credentials }
@@ -51,6 +59,9 @@ final class ListFolderTests: XCTestCase {
 
     let result = try await listFolder(params)
 
+    await didRefreshToken.withValue {
+      XCTAssertEqual($0, 1)
+    }
     await httpRequests.withValue {
       let expectedRequest: URLRequest = {
         let url = URL(string: "https://api.dropboxapi.com/2/files/list_folder")!
@@ -97,6 +108,11 @@ final class ListFolderTests: XCTestCase {
 
   func testListFolderWhenNotAuthorized() async {
     let listFolder = ListFolder.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { nil }
@@ -118,6 +134,11 @@ final class ListFolderTests: XCTestCase {
 
   func testListFolderErrorResponse() async {
     let listFolder = ListFolder.live(
+      auth: {
+        var auth = Auth.unimplemented()
+        auth.refreshToken = {}
+        return auth
+      }(),
       keychain: {
         var keychain = Keychain.unimplemented()
         keychain.loadCredentials = { .test }
