@@ -185,7 +185,57 @@ extension Auth {
         return true
       },
       refreshToken: {
-        fatalError("Unimplemented")
+        guard let credentials = await keychain.loadCredentials() else { return }
+        guard credentials.expiresAt <= now() else { return }
+
+        let request: URLRequest = {
+          var components = URLComponents()
+          components.scheme = "https"
+          components.host = "api.dropboxapi.com"
+          components.path = "/oauth2/token"
+
+          var request = URLRequest(url: components.url!)
+          request.httpMethod = "POST"
+          request.setValue(
+            "application/x-www-form-urlencoded",
+            forHTTPHeaderField: "Content-Type"
+          )
+          request.httpBody = [
+            "grant_type=refresh_token",
+            "refresh_token=\(credentials.refreshToken)",
+            "client_id=\(config.appKey)",
+          ].joined(separator: "&").data(using: .utf8)
+
+          return request
+        }()
+
+        let (responseData, response) = try await httpClient.data(for: request)
+        let statusCode = (response as? HTTPURLResponse)?.statusCode
+
+        guard let statusCode, (200..<300).contains(statusCode) else {
+          throw Error.response(statusCode: statusCode, data: responseData)
+        }
+
+        struct ResponseBody: Decodable {
+          var accessToken: String
+          var tokenType: String
+          var expiresIn: Int
+        }
+
+        let responseBody = try JSONDecoder.api.decode(
+          ResponseBody.self,
+          from: responseData
+        )
+
+        var newCredentials = credentials
+        newCredentials.accessToken = responseBody.accessToken
+        newCredentials.tokenType = responseBody.tokenType
+        newCredentials.expiresAt = Date(
+          timeInterval: TimeInterval(responseBody.expiresIn),
+          since: now()
+        )
+
+        await saveCredentials(newCredentials)
       },
       signOut: {
         await saveCredentials(nil)
