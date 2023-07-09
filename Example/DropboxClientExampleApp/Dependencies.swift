@@ -62,6 +62,15 @@ extension DropboxClient.Client: DependencyKey {
       },
       downloadFile: .init { params in
         "Preview file content for \(params.path)".data(using: .utf8)!
+      },
+      deleteFile: .init { params in
+        let entry = await entries.withValue {
+          let index = $0.firstIndex { $0.pathDisplay == params.path }!
+          let entry = $0[index]
+          $0.remove(at: index)
+          return entry
+        }
+        return DeleteFile.Result(metadata: entry)
       }
     )
   }()
