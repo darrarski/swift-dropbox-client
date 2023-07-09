@@ -164,6 +164,24 @@ struct ExampleView: View {
       } label: {
         Text("Download File")
       }
+
+      Button(role: .destructive) {
+        Task<Void, Never> {
+          do {
+            _ = try await client.deleteFile(path: entry.pathDisplay)
+            if let entries = list?.entries {
+              list?.entries = entries.filter { $0.pathDisplay != entry.pathDisplay }
+            }
+          } catch {
+            log.error("DeleteFile failure", metadata: [
+              "error": "\(error)",
+              "localizedDescription": "\(error.localizedDescription)"
+            ])
+          }
+        }
+      } label: {
+        Text("Delete File")
+      }
     }
   }
 }
