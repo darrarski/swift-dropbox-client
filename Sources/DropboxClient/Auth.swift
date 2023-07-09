@@ -5,6 +5,7 @@ public struct Auth: Sendable {
   public typealias IsSignedInStream = @Sendable () -> AsyncStream<Bool>
   public typealias SignIn = @Sendable () async -> Void
   public typealias HandleRedirect = @Sendable (URL) async throws -> Bool
+  public typealias RefreshToken = @Sendable () async throws -> Void
   public typealias SignOut = @Sendable () async -> Void
 
   public enum Error: Swift.Error, Sendable, Equatable {
@@ -18,12 +19,14 @@ public struct Auth: Sendable {
     isSignedInStream: @escaping IsSignedInStream,
     signIn: @escaping SignIn,
     handleRedirect: @escaping HandleRedirect,
+    refreshToken: @escaping RefreshToken,
     signOut: @escaping SignOut
   ) {
     self.isSignedIn = isSignedIn
     self.isSignedInStream = isSignedInStream
     self.signIn = signIn
     self.handleRedirect = handleRedirect
+    self.refreshToken = refreshToken
     self.signOut = signOut
   }
 
@@ -31,6 +34,7 @@ public struct Auth: Sendable {
   public var isSignedInStream: IsSignedInStream
   public var signIn: SignIn
   public var handleRedirect: HandleRedirect
+  public var refreshToken: RefreshToken
   public var signOut: SignOut
 }
 
@@ -179,6 +183,9 @@ extension Auth {
         await saveCredentials(credentials)
 
         return true
+      },
+      refreshToken: {
+        fatalError("Unimplemented")
       },
       signOut: {
         await saveCredentials(nil)
