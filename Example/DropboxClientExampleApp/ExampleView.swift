@@ -93,6 +93,26 @@ struct ExampleView: View {
       } label: {
         Text("List Folder")
       }
+
+      Button {
+        Task<Void, Never> {
+          do {
+            _ = try await client.uploadFile(
+              path: "/example-upload.txt",
+              data: "swift-dropbox-client example uploaded file".data(using: .utf8)!,
+              mode: .add,
+              autorename: true
+            )
+          } catch {
+            log.error("UploadFile failure", metadata: [
+              "error": "\(error)",
+              "localizedDescription": "\(error.localizedDescription)"
+            ])
+          }
+        }
+      } label: {
+        Text("Upload file")
+      }
     }
 
     if let list {
@@ -163,6 +183,27 @@ struct ExampleView: View {
         }
       } label: {
         Text("Download File")
+      }
+
+      Button {
+        Task<Void, Never> {
+          do {
+            _ = try await client.uploadFile(
+              path: entry.pathDisplay,
+              data: "Uploaded with overwrite at \(Date().formatted(date: .complete, time: .complete))"
+                .data(using: .utf8)!,
+              mode: .overwrite,
+              autorename: false
+            )
+          } catch {
+            log.error("UploadFile failure", metadata: [
+              "error": "\(error)",
+              "localizedDescription": "\(error.localizedDescription)"
+            ])
+          }
+        }
+      } label: {
+        Text("Upload file (overwrite)")
       }
 
       Button(role: .destructive) {

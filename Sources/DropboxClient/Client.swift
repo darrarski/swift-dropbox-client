@@ -3,18 +3,21 @@ public struct Client: Sendable {
     auth: Auth,
     listFolder: ListFolder,
     downloadFile: DownloadFile,
-    deleteFile: DeleteFile
+    deleteFile: DeleteFile,
+    uploadFile: UploadFile
   ) {
     self.auth = auth
     self.listFolder = listFolder
     self.downloadFile = downloadFile
     self.deleteFile = deleteFile
+    self.uploadFile = uploadFile
   }
 
   public var auth: Auth
   public var listFolder: ListFolder
   public var downloadFile: DownloadFile
   public var deleteFile: DeleteFile
+  public var uploadFile: UploadFile
 }
 
 extension Client {
@@ -44,6 +47,10 @@ extension Client {
         httpClient: httpClient
       ),
       deleteFile: .live(
+        keychain: keychain,
+        httpClient: httpClient
+      ),
+      uploadFile: .live(
         keychain: keychain,
         httpClient: httpClient
       )
