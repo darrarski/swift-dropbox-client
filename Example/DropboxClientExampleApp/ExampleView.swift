@@ -4,11 +4,16 @@ import Logging
 import SwiftUI
 
 struct ExampleView: View {
+  struct Alert: Equatable {
+    var title: String
+    var message: String
+  }
+
   @Dependency(\.dropboxClient) var client
   let log = Logger(label: Bundle.main.bundleIdentifier!)
   @State var isSignedIn = false
   @State var list: ListFolder.Result?
-  @State var fileContentAlert: String?
+  @State var alert: Alert?
 
   var body: some View {
     Form {
@@ -35,18 +40,18 @@ struct ExampleView: View {
       }
     }
     .alert(
-      "File content",
+      alert?.title ?? "",
       isPresented: Binding(
-        get: { fileContentAlert != nil },
+        get: { alert != nil },
         set: { isPresented in
           if !isPresented {
-            fileContentAlert = nil
+            alert = nil
           }
         }
       ),
-      presenting: fileContentAlert,
+      presenting: alert,
       actions: { _ in Button("OK") {} },
-      message: { Text($0) }
+      message: { Text($0.message) }
     )
   }
 
@@ -130,98 +135,117 @@ struct ExampleView: View {
 
   func listEntrySection(_ entry: Metadata) -> some View {
     Section {
-      VStack(alignment: .leading) {
-        Text("Tag").font(.caption).foregroundColor(.secondary)
-        Text(entry.tag.rawValue)
+      Group {
+        VStack(alignment: .leading) {
+          Text("Tag").font(.caption).foregroundColor(.secondary)
+          Text(entry.tag.rawValue)
+        }
+
+        VStack(alignment: .leading) {
+          Text("ID").font(.caption).foregroundColor(.secondary)
+          Text(entry.id)
+        }
+
+        VStack(alignment: .leading) {
+          Text("Name").font(.caption).foregroundColor(.secondary)
+          Text(entry.name)
+        }
+
+        VStack(alignment: .leading) {
+          Text("Path (display)").font(.caption).foregroundColor(.secondary)
+          Text(entry.pathDisplay)
+        }
+
+        VStack(alignment: .leading) {
+          Text("Path (lower)").font(.caption).foregroundColor(.secondary)
+          Text(entry.pathLower)
+        }
+
+        VStack(alignment: .leading) {
+          Text("Client modified").font(.caption).foregroundColor(.secondary)
+          Text(entry.clientModified.formatted(date: .complete, time: .complete))
+        }
+
+        VStack(alignment: .leading) {
+          Text("Server modified").font(.caption).foregroundColor(.secondary)
+          Text(entry.serverModified.formatted(date: .complete, time: .complete))
+        }
       }
 
-      VStack(alignment: .leading) {
-        Text("ID").font(.caption).foregroundColor(.secondary)
-        Text(entry.id)
-      }
-
-      VStack(alignment: .leading) {
-        Text("Name").font(.caption).foregroundColor(.secondary)
-        Text(entry.name)
-      }
-
-      VStack(alignment: .leading) {
-        Text("Path (display)").font(.caption).foregroundColor(.secondary)
-        Text(entry.pathDisplay)
-      }
-
-      VStack(alignment: .leading) {
-        Text("Path (lower)").font(.caption).foregroundColor(.secondary)
-        Text(entry.pathLower)
-      }
-
-      VStack(alignment: .leading) {
-        Text("Client modified").font(.caption).foregroundColor(.secondary)
-        Text(entry.clientModified.formatted(date: .complete, time: .complete))
-      }
-
-      VStack(alignment: .leading) {
-        Text("Server modified").font(.caption).foregroundColor(.secondary)
-        Text(entry.serverModified.formatted(date: .complete, time: .complete))
-      }
-
-      Button {
-        Task<Void, Never> {
-          do {
-            let data = try await client.downloadFile(path: entry.id)
-            if let string = String(data: data, encoding: .utf8) {
-              fileContentAlert = string
-            } else {
-              fileContentAlert = data.base64EncodedString()
+      Group {
+        Button {
+          Task<Void, Never> {
+            do {
+              let metadata = try await client.getMetadata(path: entry.pathDisplay)
+              alert = Alert(title: "Metadata", message: String(describing: metadata))
+            } catch {
+              log.error("GetMetadata failure", metadata: [
+                "error": "\(error)",
+                "localizedDescription": "\(error.localizedDescription)"
+              ])
             }
-          } catch {
-            log.error("DownloadFile failure", metadata: [
-              "error": "\(error)",
-              "localizedDescription": "\(error.localizedDescription)"
-            ])
           }
+        } label: {
+          Text("Get Metadata")
         }
-      } label: {
-        Text("Download File")
-      }
 
-      Button {
-        Task<Void, Never> {
-          do {
-            _ = try await client.uploadFile(
-              path: entry.pathDisplay,
-              data: "Uploaded with overwrite at \(Date().formatted(date: .complete, time: .complete))"
-                .data(using: .utf8)!,
-              mode: .overwrite,
-              autorename: false
-            )
-          } catch {
-            log.error("UploadFile failure", metadata: [
-              "error": "\(error)",
-              "localizedDescription": "\(error.localizedDescription)"
-            ])
-          }
-        }
-      } label: {
-        Text("Upload file (overwrite)")
-      }
-
-      Button(role: .destructive) {
-        Task<Void, Never> {
-          do {
-            _ = try await client.deleteFile(path: entry.pathDisplay)
-            if let entries = list?.entries {
-              list?.entries = entries.filter { $0.pathDisplay != entry.pathDisplay }
+        Button {
+          Task<Void, Never> {
+            do {
+              let data = try await client.downloadFile(path: entry.id)
+              alert = Alert(
+                title: "Content",
+                message: String(data: data, encoding: .utf8) ?? data.base64EncodedString()
+              )
+            } catch {
+              log.error("DownloadFile failure", metadata: [
+                "error": "\(error)",
+                "localizedDescription": "\(error.localizedDescription)"
+              ])
             }
-          } catch {
-            log.error("DeleteFile failure", metadata: [
-              "error": "\(error)",
-              "localizedDescription": "\(error.localizedDescription)"
-            ])
           }
+        } label: {
+          Text("Download File")
         }
-      } label: {
-        Text("Delete File")
+
+        Button {
+          Task<Void, Never> {
+            do {
+              _ = try await client.uploadFile(
+                path: entry.pathDisplay,
+                data: "Uploaded with overwrite at \(Date().formatted(date: .complete, time: .complete))"
+                  .data(using: .utf8)!,
+                mode: .overwrite,
+                autorename: false
+              )
+            } catch {
+              log.error("UploadFile failure", metadata: [
+                "error": "\(error)",
+                "localizedDescription": "\(error.localizedDescription)"
+              ])
+            }
+          }
+        } label: {
+          Text("Upload file (overwrite)")
+        }
+
+        Button(role: .destructive) {
+          Task<Void, Never> {
+            do {
+              _ = try await client.deleteFile(path: entry.pathDisplay)
+              if let entries = list?.entries {
+                list?.entries = entries.filter { $0.pathDisplay != entry.pathDisplay }
+              }
+            } catch {
+              log.error("DeleteFile failure", metadata: [
+                "error": "\(error)",
+                "localizedDescription": "\(error.localizedDescription)"
+              ])
+            }
+          }
+        } label: {
+          Text("Delete File")
+        }
       }
     }
   }
