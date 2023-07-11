@@ -83,6 +83,18 @@ extension DropboxClient.Client: DependencyKey {
           serverModified: Date(),
           isDownloadable: true
         )
+      },
+      getMetadata: .init { params in
+        Metadata(
+          tag: .file,
+          id: "id:preview-uploaded",
+          name: "Preview-uploaded.txt",
+          pathDisplay: "/Preview-uploaded.txt",
+          pathLower: "/preview-uploaded.txt",
+          clientModified: Date(),
+          serverModified: Date(),
+          isDownloadable: true
+        )
       }
     )
   }()
