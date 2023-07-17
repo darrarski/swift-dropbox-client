@@ -161,14 +161,18 @@ struct ExampleView: View {
           Text(entry.pathLower)
         }
 
-        VStack(alignment: .leading) {
-          Text("Client modified").font(.caption).foregroundColor(.secondary)
-          Text(entry.clientModified.formatted(date: .complete, time: .complete))
+        if let date = entry.clientModified {
+          VStack(alignment: .leading) {
+            Text("Client modified").font(.caption).foregroundColor(.secondary)
+            Text(date.formatted(date: .complete, time: .complete))
+          }
         }
 
-        VStack(alignment: .leading) {
-          Text("Server modified").font(.caption).foregroundColor(.secondary)
-          Text(entry.serverModified.formatted(date: .complete, time: .complete))
+        if let date = entry.serverModified {
+          VStack(alignment: .leading) {
+            Text("Server modified").font(.caption).foregroundColor(.secondary)
+            Text(date.formatted(date: .complete, time: .complete))
+          }
         }
       }
 
