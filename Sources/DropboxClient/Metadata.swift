@@ -11,9 +11,9 @@ public struct Metadata: Sendable, Equatable, Identifiable {
     name: String,
     pathDisplay: String,
     pathLower: String,
-    clientModified: Date,
-    serverModified: Date,
-    isDownloadable: Bool
+    clientModified: Date?,
+    serverModified: Date?,
+    isDownloadable: Bool?
   ) {
     self.tag = tag
     self.id = id
@@ -30,9 +30,9 @@ public struct Metadata: Sendable, Equatable, Identifiable {
   public var name: String
   public var pathDisplay: String
   public var pathLower: String
-  public var clientModified: Date
-  public var serverModified: Date
-  public var isDownloadable: Bool
+  public var clientModified: Date?
+  public var serverModified: Date?
+  public var isDownloadable: Bool?
 }
 
 extension Metadata: Codable {
